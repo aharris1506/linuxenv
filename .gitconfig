@@ -1,0 +1,13 @@
+[user]
+	name = Adrian Harris
+	email = aharris@ventanamicro.com
+[core]
+	editor = emacs
+[alias]
+	st = status -s
+	ci = commit
+	br = branch
+	co = checkout
+	
+[branch]
+	autosetuprebase = always
