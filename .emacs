@@ -1,30 +1,20 @@
-;; A lot of the inspiration for this .emacs file comes from here:
-
-;; https://github.com/velkyel/dotfiles/blob/bb90dd2551bbb8b45f9560c2cba2d32256728a4b/.emacs
+;;
+;; Any key path setup first
+;;
+(add-to-list 'load-path "/home/aharris/.emacs.d/lisp/cc-mode-5.33")
 
 ;;
 ;; keep garbage collection overhead under control
+;; https://github.com/velkyel/dotfiles/blob/bb90dd2551bbb8b45f9560c2cba2d32256728a4b/.emacs
 ;;
 (setq my-gc-threshold (* 64 1024 1024))
-
 (setq gc-cons-threshold most-positive-fixnum)
-
 (add-hook 'emacs-startup-hook
           (lambda () (setq gc-cons-threshold my-gc-threshold)))
-
 (add-hook 'minibuffer-setup-hook
           (lambda () (setq gc-cons-threshold most-positive-fixnum)))
-
 (add-hook 'minibuffer-exit-hook
           (lambda () (setq gc-cons-threshold my-gc-threshold)))
-
-;;
-;; initialize package manager
-;;
-
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
 
 ;;
 ;; Helpful key combos
@@ -35,34 +25,11 @@
 (global-set-key "\C-cw" 'what-line)
 (global-set-key [C-tab] 'other-window)
 (global-set-key (kbd "C-\\") 'fill-paragraph)
-(require 'magit)
-(global-set-key "\C-xg" 'magit-status)
 
 ;;
-;; cmake
+;; Some meta-key fixes
 ;;
-;;(setq load-path (cons (expand-file-name "/dir/with/cmake-mode") load-path))
-(require 'cmake-mode)
-
-;;
-;; slime
-;;
-(setq inferior-lisp-program "/usr/bin/sbcl")
-(require 'slime)
-(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
-(add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
-(slime-setup '(slime-fancy slime-company))
-
-;;
-;; markdown mode
-;;
-(require 'markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-
-(autoload 'gfm-mode "markdown-mode"
-   "Major mode for editing GitHub Flavored Markdown files" t)
-(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+(setq-default x-super-keysym 'meta)
 
 ;;
 ;; configure some UI items
@@ -71,23 +38,61 @@
 (column-number-mode t)
 (size-indication-mode t)
 (ido-mode t)
-
-;;(defun setup-my-fringe ()
-;;  (fringe-mode '(8 . 0)))
-
 (when (display-graphic-p)
   (tool-bar-mode -1)
   (tooltip-mode -1)
   (scroll-bar-mode -1))
-
 (setq frame-title-format
       '(buffer-file-name "%f"
                          (dired-directory dired-directory "%b")))
-;;  (add-hook 'window-setup-hook 'setup-my-fringe)
-;;  (add-hook 'after-make-frame-functions 'setup-my-fringe))
-
 (setq inhibit-startup-message t
       initial-scratch-message nil)
+(global-auto-revert-mode t)
+
+;; make sure correct cc-mode is found
+(add-to-list 'load-path "/home/aharris/.emacs.d/lisp/cc-mode-5.33")
+
+;;
+;; initialize package manager
+;;
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(package-initialize)
+(dolist (package '(use-package))
+  (unless (package-installed-p package)
+    (package-install package)))
+
+;;
+;; Magit for GIT
+;;
+(use-package magit :ensure t)
+(global-set-key "\C-xg" 'magit-status)
+
+;;
+;; cmake
+;;
+(use-package cmake-mode :ensure t)
+
+;;
+;; slime
+;;
+(setq inferior-lisp-program "/usr/bin/sbcl")
+(use-package slime :ensure t)
+(use-package slime-company :ensure t)
+(add-hook 'lisp-mode-hook (lambda () (slime-mode t)))
+(add-hook 'inferior-lisp-mode-hook (lambda () (inferior-slime-mode t)))
+(slime-setup '(slime-fancy slime-company))
+
+;;
+;; markdown mode
+;;
+(use-package markdown-mode :ensure t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
+(autoload 'gfm-mode "markdown-mode"
+   "Major mode for editing GitHub Flavored Markdown files" t)
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
 ;;
 ;; GDB
@@ -95,20 +100,31 @@
 (setq-default gdb-many-windows nil)
 
 ;;
+;; enable 'modern' c++ font-lock and new cc-mode for C++11,14,17
+;;
+;; This involves downloading and installing cc-mode 5.33:
+;;   https://github.com/arximboldi/cc-mode
+;; And 'modern' c++ font lock:
+;;   https://github.com/ludwigpacifici/modern-cpp-font-lock
+;;
+(use-package modern-cpp-font-lock :ensure t)
+(modern-c++-font-lock-global-mode t)
+
+;;
 ;; rtags stuff
 ;; https://github.com/Andersbakken/rtags/wiki/Usage
 ;;
-
-(require 'rtags)
-(require 'company)
+(use-package rtags :ensure t)
+(setq-default rtags-path "/opt/bin")
+(use-package company :ensure t)
 (global-company-mode)
 ;; company mode is not super helpful in gdb
 (add-hook 'gdb-mode-hook 'my-gdb-hook)
 (defun my-gdb-hook ()
   (company-mode -1))
 ;; use rtags flycheck mode -- clang warnings shown inline
-(require 'flycheck)
-(require 'flycheck-rtags)
+(use-package flycheck :ensure t)
+(use-package flycheck-rtags :ensure t)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (add-hook 'c++-mode-hook (lambda () (setq flycheck-clang-language-standard "c++17")))
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
@@ -150,7 +166,6 @@
 (setq rtags-autostart-diagnostics t)
 (rtags-diagnostics)
 (rtags-set-periodic-reparse-timeout 1)
-;;(setq rtags-enable-unsaved-reparsing t)
 (setq rtags-completions-enabled t)
 (push 'company-rtags company-backends)
 (define-key c-mode-base-map (kbd "C-/") (function company-complete))
@@ -166,7 +181,7 @@
  '(custom-enabled-themes (quote (wombat)))
  '(package-selected-packages
    (quote
-    (slime-company slime cmake-mode magit markdown-mode flycheck-rtags company-rtags)))
+    (modern-cpp-font-lock yaml-mode slime-company slime cmake-mode magit markdown-mode flycheck-rtags company-rtags)))
  '(rtags-enable-unsaved-reparsing t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

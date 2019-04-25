@@ -16,10 +16,15 @@ export PATH=$LOCAL/bin:/opt/bin:$PATH
 
 alias l='ls -F'
 alias lt='ls -ltr'
-alias ll='ls -ll'
+alias ll='ls -al'
 
 git_branch() {
      git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
-export PS1="\[\033[33m\]\$(git_branch)\[\033[00m\]\$ " 
+# For Centos
+#export PS1="\[\033[33m\]\$(git_branch)\[\033[00m\]\$ " 
+# For Ubuntu 18.04 (gnome 3)
+# export PS1="\[\033]0;\w\007\]\[\033[33m\]\$(git_branch) \[\033[00m\]\\$ "
+
+source $HOME/.git-completion.bash 
