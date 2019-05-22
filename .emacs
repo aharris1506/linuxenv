@@ -27,6 +27,11 @@
 (global-set-key (kbd "C-\\") 'fill-paragraph)
 
 ;;
+;; sucks when I fat-finger C-x C-c...
+;;
+(setq confirm-kill-emacs 'y-or-n-p)
+
+;;
 ;; Some meta-key fixes
 ;;
 (setq-default x-super-keysym 'meta)
@@ -109,6 +114,8 @@
 ;;
 (use-package modern-cpp-font-lock :ensure t)
 (modern-c++-font-lock-global-mode t)
+;; fix for constexpr C++17 bug
+(custom-set-variables '(c-noise-macro-names '("constexpr")))
 
 ;;
 ;; rtags stuff
