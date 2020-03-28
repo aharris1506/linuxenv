@@ -151,7 +151,7 @@
 ;; start rtags (if needed)
 (rtags-start-process-unless-running)
 
-(define-key c-mode-base-map (kbd "M-.")
+(define-key c-mode-base-map (kbd "M-/")
   (function rtags-find-symbol-at-point))
 (define-key c-mode-base-map (kbd "M-,")
   (function rtags-find-references-at-point))
@@ -179,6 +179,49 @@
   ;; c-mode-common-hook is also called by c++-mode
 (add-hook 'c-mode-common-hook #'setup-flycheck-rtags)
 (add-hook 'c++-mode-common-hook #'setup-flycheck-rtags)
+
+;; pylint: https://docs.pylint.org/en/1.6.0/ide-integration.html
+;; Configure flymake for Python
+(when (load "flymake" t)
+  (defun flymake-pylint-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "epylint" (list local-file))))
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pylint-init)))
+
+;; Set as a minor mode for Python
+(add-hook 'python-mode-hook '(lambda () (flymake-mode)))
+
+;; Configure to wait a bit longer after edits before starting
+(setq-default flymake-no-changes-timeout '3)
+
+;; Keymaps to navigate to the errors
+(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-cn" 'flymake-goto-next-error)))
+(add-hook 'python-mode-hook '(lambda () (define-key python-mode-map "\C-cp" 'flymake-goto-prev-error)))
+
+;; To avoid having to mouse hover for the error message, these functions make flymake error messages
+;; appear in the minibuffer
+(defun show-fly-err-at-point ()
+  "If the cursor is sitting on a flymake error, display the message in the minibuffer"
+  (require 'cl)
+  (interactive)
+  (let ((line-no (line-number-at-pos)))
+    (dolist (elem flymake-err-info)
+      (if (eq (car elem) line-no)
+      (let ((err (car (second elem))))
+        (message "%s" (flymake-ler-text err)))))))
+
+(add-hook 'post-command-hook 'show-fly-err-at-point)
+
+;; Python flycheck
+(custom-set-variables
+ '(flycheck-python-flake8-executable "python3")
+ '(flycheck-python-pycompile-executable "python3")
+ '(flycheck-python-pylint-executable "python3"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

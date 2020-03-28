@@ -25,7 +25,7 @@ git_branch() {
 # For Centos
 #export PS1="\[\033[33m\]\$(git_branch)\[\033[00m\]\$ " 
 # For Ubuntu 18.04 (gnome 3)
-# export PS1="\[\033]0;\w\007\]\[\033[33m\]\$(git_branch) \[\033[00m\]\\$ "
+export PS1="\[\033]0;\w\007\]\[\033[33m\]\$(git_branch) \[\033[00m\]\\$ "
 
 source $HOME/.git-completion.bash 
 
