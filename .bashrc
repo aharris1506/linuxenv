@@ -2,17 +2,15 @@
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
+        . /etc/bashrc
 fi
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-LOCAL=$HOME/local
 #
 # User specific aliases and functions
 #
-export PATH=$LOCAL/bin:/opt/bin:$PATH
 
 alias l='ls -F'
 alias lt='ls -ltr'
@@ -23,11 +21,11 @@ git_branch() {
 }
 
 # For Centos
-#export PS1="\[\033[33m\]\$(git_branch)\[\033[00m\]\$ " 
+#export PS1="\[\033[33m\]\$(git_branch)\[\033[00m\]\$ "
 # For Ubuntu 18.04 (gnome 3)
 export PS1="\[\033]0;\w\007\]\[\033[33m\]\$(git_branch) \[\033[00m\]\\$ "
 
-source $HOME/.git-completion.bash 
+source $HOME/.git-completion.bash
 
 # https://stackoverflow.com/questions/9457233/unlimited-bash-history
 # Eternal bash history.
@@ -43,3 +41,6 @@ export HISTFILE=~/.bash_eternal_history
 # Force prompt to write history after every command.
 # http://superuser.com/questions/20900/bash-history-loss
 #PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+shopt -s histappend
+
+export INPUTRC=$HOME/.inputrc
