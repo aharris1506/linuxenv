@@ -113,7 +113,6 @@
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
 
-
 ;;
 ;; enable 'modern' c++ font-lock and new cc-mode for C++11,14,17
 ;;
@@ -122,18 +121,6 @@
 ;;
 (req-package modern-cpp-font-lock :ensure t)
 (modern-c++-font-lock-global-mode t)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(c-noise-macro-names (quote ("constexpr")))
- '(custom-enabled-themes (quote (wombat)))
- '(elpy-syntax-check-command "pylint")
- '(package-selected-packages
-   (quote
-    (yaml-mode elpy pylint flycheck modern-cpp-font-lock cmake-mode markdown-mode flycheck-rtags company-rtags)))
- '(rtags-enable-unsaved-reparsing t))
 
 ;;
 ;; rtags stuff
@@ -143,8 +130,10 @@
 (use-package company :ensure t)
 (push 'company-rtags company-backends)
 (global-company-mode)
-(define-key c-mode-base-map (kbd "C-/")
-  (function company-complete))
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (define-key c-mode-base-map (kbd "C-/")
+              (function company-complete))))
 ;; company mode is not super helpful in gdb
 (add-hook 'gdb-mode-hook 'my-gdb-hook)
 (defun my-gdb-hook ()
@@ -167,13 +156,18 @@
 ;;
 (req-package blacken :ensure t)
 (req-package elpy :ensure t :init (elpy-enable))
+(elpy-enable)
 (setq elpy-rpc-virtualenv-path 'current)
-(add-hook 'elpy-mode-hook 'flycheck-mode)
+(when (load "flycheck" t t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
 (add-hook 'elpy-mode-hook (lambda ()
                             (highlight-indentation-mode -1)
                             (add-hook 'before-save-hook
                                       'elpy-black-fix-code nil t)))
-(add-hook 'python-mode-hook '(lambda () (elpy-mode)))
+(add-hook 'python-mode-hook '(lambda ()
+                               (elpy-mode)
+                               (setq flycheck-pylintrc "~/.pylintrc")))
 
 
 (custom-set-faces
@@ -181,4 +175,20 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "Ubuntu Mono" :foundry "DAMA" :slant normal :weight normal :height 173 :width normal)))))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(c-noise-macro-names (quote ("constexpr")))
+ '(column-number-mode t)
+ '(custom-enabled-themes (quote (wombat)))
+ '(elpy-syntax-check-command "pylint")
+ '(package-selected-packages
+   (quote
+    (blacken rtags yaml-mode elpy pylint flycheck modern-cpp-font-lock cmake-mode markdown-mode flycheck-rtags company-rtags)))
+ '(rtags-enable-unsaved-reparsing t)
+ '(size-indication-mode t)
+ '(tool-bar-mode nil))

@@ -1,0 +1,70 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*- 
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("RTags_12"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . ";\n              ")
+ (position . 14748))
+("RTags_11"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . "tore();\n        ")
+ (position . 10820))
+("RTags_10"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . "cessed) {\n      ")
+ (position . 9689))
+("RTags_9"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . "ute);\n          ")
+ (position . 9579))
+("RTags_8"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . "ty) {\n          ")
+ (position . 9253))
+("RTags_7"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . "te) {\n          ")
+ (position . 9128))
+("RTags_6"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . "cute) {\n        ")
+ (position . 8989))
+("RTags_5"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . ".user)) {\n      ")
+ (position . 8868))
+("RTags_4"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . ".write) {\n      ")
+ (position . 8461))
+("RTags_3"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . ".valid) {\n      ")
+ (position . 8291))
+("RTags_2"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(cause, add")
+ (rear-context-string . "s_store();\n\n    ")
+ (position . 7715))
+("RTags_1"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . "true;\n          ")
+ (position . 4672))
+("RTags_0"
+ (filename . "~/work/swtools/iss/core/mmu.cc")
+ (front-context-string . "fault(Cause::Pag")
+ (rear-context-string . "tore();\n        ")
+ (position . 3127))
+)
